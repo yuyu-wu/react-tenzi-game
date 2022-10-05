@@ -8,8 +8,10 @@ export default function App() {
 	const [ dice, setDice ] = React.useState(allNewDice());
 	const [ tenzies, setTenzies ] = React.useState(false);
 
-  const [ time, setTime ] = React.useState(0);
+  	const [ time, setTime ] = React.useState(0);
 	const [ timerOn, setTimerOn ] = React.useState(false);
+
+	const [ rolls, setRolls ] = React.useState(0);
 
 	React.useEffect(
 		() => {
@@ -18,11 +20,9 @@ export default function App() {
 			const allSameValue = dice.every((die) => die.value === firstValue);
 			if (allHeld && allSameValue) {
 				setTenzies(true);
-        setTimerOn(false);
+        		setTimerOn(false);
 			}
-		},
-		[ dice ]
-	);
+		}, [ dice ]);
 
 	function generateNewDie() {
 		return {
@@ -43,26 +43,27 @@ export default function App() {
 	function rollDice() {
 		if (!tenzies) {
       // setTime(0);
-      setTimerOn(true);
-			setDice((oldDice) =>
+      		setTimerOn(true);
+			setDice(oldDice =>
 				oldDice.map((die) => {
 					return die.isHeld ? die : generateNewDie();
 				})
 			);
+			setRolls(prevRolls => prevRolls + 1);
 		} else {
 			setTenzies(false);
 			setDice(allNewDice());
-      setTime(0);
-      setTimerOn(false);
-
+			setRolls(0);
+      		setTime(0);
+      		setTimerOn(false);
 		}
 	}
 
 	function holdDice(id) {
-    if (!tenzies) {
-      setTimerOn(true);
-    }
-		setDice((oldDice) =>
+    	if (!tenzies) {
+      		setTimerOn(true);
+    	}
+		setDice(oldDice =>
 			oldDice.map((die) => {
 				return die.id === id ? { ...die, isHeld: !die.isHeld } : die;
 			})
@@ -93,8 +94,8 @@ export default function App() {
 	);
 
 	return (
-    <div className="container">
-      <div className="Timer">
+    	<div className="container">
+      		<div className="Timer">
 				<div id="display">
 					<span>{('0' + Math.floor((time / 60000) % 60)).slice(-2)}:</span>
 					<span>{('0' + Math.floor((time / 1000) % 60)).slice(-2)}:</span>
@@ -102,20 +103,19 @@ export default function App() {
           
 				</div>
 			</div>
-		<main>
-			{tenzies && <Confetti />}
-			
-			
-			<h1 className="title">Tenzi</h1>
-			<p className="instructions">
-				Roll until all dice are the same. Click each die to freeze it at its current value between rolls.
-			</p>
-			{/* <div className="dice-container">{tenzies ? {diceElements} : ''}</div> */}
-      <div className="dice-container">{diceElements}</div>
-			<button className="roll-dice" onClick={rollDice}>
-				{tenzies ? 'New Game' : 'Roll Dice'}
-			</button>
-		</main>
-    </div>
+			<main>
+				{tenzies && <Confetti />}
+				<h2 className="best-rolls">Rolls: {rolls}</h2>
+				<h1 className="title">Tenzi</h1>
+				<p className="instructions">
+					Roll until all dice are the same. Click each die to freeze it at its current value between rolls.
+				</p>
+				{/* <div className="dice-container">{tenzies ? {diceElements} : ''}</div> */}
+      			<div className="dice-container">{diceElements}</div>
+				<button className="roll-dice" onClick={rollDice}>
+					{tenzies ? 'New Game' : 'Roll Dice'}
+				</button>
+			</main>
+    	</div>
 	);
 }
