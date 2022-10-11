@@ -95,17 +95,21 @@ export default function App() {
 
 	return (
     	<div className="container">
-      		<div className="Timer">
-				<div id="display">
-					<span>{('0' + Math.floor((time / 60000) % 60)).slice(-2)}:</span>
-					<span>{('0' + Math.floor((time / 1000) % 60)).slice(-2)}:</span>
-					<span>{('0' + (time / 10) % 100).slice(-2)}</span>
-          
+			<div className="display">
+				<div className="Timer">
+					<div id="timer-display">
+						<span>{('0' + Math.floor((time / 60000) % 60)).slice(-2)}:</span>
+						<span>{('0' + Math.floor((time / 1000) % 60)).slice(-2)}:</span>
+						<span>{('0' + (time / 10) % 100).slice(-2)}</span>
+					</div>
 				</div>
+
+				<p className="rolls-count">Rolls: {rolls}</p>
 			</div>
+      		
 			<main>
 				{tenzies && <Confetti />}
-				<h2 className="best-rolls">Rolls: {rolls}</h2>
+				
 				<h1 className="title">Tenzi</h1>
 				<p className="instructions">
 					Roll until all dice are the same. Click each die to freeze it at its current value between rolls.
